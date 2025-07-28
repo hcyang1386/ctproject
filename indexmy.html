@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>타이틀: 생물 도감 완성하기</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    h1, h2 { color: #2d4b7c; }
+    .box { border: 2px solid #2d4b7c; padding: 15px; margin-bottom: 20px; background-color: #f3f7ff; }
+    .timer-box { margin-top: 20px; }
+    .question-box { background-color: #fff; border: 1px solid #ccc; padding: 10px; }
+    label { font-weight: bold; }
+    select, input[type=button], input[type=submit] { margin-top: 10px; padding: 5px; }
+    img.flowchart { width: 100%; max-width: 600px; margin-top: 10px; border: 1px solid #ccc; }
+    .result { font-weight: bold; color: green; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <h1>타이틀: 생물 도감 완성하기</h1>
+  <h2>대상: 중1</h2>
+
+  <div class="box">
+    <h3>지문</h3>
+    <p>비버네 반 학생들은 수행평가로 생물 도감의 자료를 정리하고 있다. 이 수행평가에서 비버는 교사미역, 메뚜기, 푸른곰팡이, 전자균, 파리지옥, 토종늑, 산호초 등의 생물을 5계에 맞게 적절하게 분류하여 분류하게 하려 한다.</p>
+  </div>
+
+  <div class="box">
+    <h3>규칙</h3>
+    <table border="1" cellpadding="5">
+      <thead><tr><th>명칭</th><th>특징</th></tr></thead>
+      <tbody>
+        <tr><td>원핵생물계</td><td>세포에 핵이 없음</td></tr>
+        <tr><td>원생생물계</td><td>세포에 핵이 있고, 단세포 생물이거나 다세포 생물이지만 조직이 분화되지 않음</td></tr>
+        <tr><td>식물계</td><td>세포에 핵이 있고, 다세포 생물이며, 엽록체가 있어 광합성을 통해 영양분을 만듦</td></tr>
+        <tr><td>동물계</td><td>세포에 핵이 있고, 다세포 생물이며, 다른 생물을 잡아먹어 영양분을 얻으며 자유롭게 움직일 수 있음</td></tr>
+        <tr><td>균계</td><td>세포에 핵이 있고, 균사로 생물의 고유 분류, 줄기, 잎이 발달하지 않음</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box">
+    <h3>문제</h3>
+    <div class="question-box">
+      <p>이 표를 이용하여 생물을 5계 수준에서 분류하는 알고리즘 흐름도를 제작하려고 할 때, (가)~(라)에 들어갈 적절한 문장을 작성하시오.</p>
+      <img class="flowchart" src="/mnt/data/d8bd165e-d83c-4fe3-92ba-ab86a92c02fa.png" alt="생물 분류 흐름도" />
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>보기</h3>
+    <form onsubmit="return checkAnswers()">
+      <ul>
+        <li>(가): <input type="text" id="a" required /></li>
+        <li>(나): <input type="text" id="b" required /></li>
+        <li>(다): <input type="text" id="c" required /></li>
+        <li>(라): <input type="text" id="d" required /></li>
+      </ul>
+      <input type="submit" value="제출하기" />
+    </form>
+    <div id="result" class="result"></div>
+  </div>
+
+  <div class="timer-box">
+    <label>시간 선택: </label>
+    <select id="time-select">
+      <option value="30">30초</option>
+      <option value="60">1분</option>
+      <option value="90">1분 30초</option>
+      <option value="120">2분</option>
+    </select>
+    <input type="button" value="문제 풀기 시작" onclick="startQuiz()" />
+    <div id="timer-display" style="margin-top: 10px; font-size: 18px;"></div>
+  </div>
+
+  <script>
+    let timer;
+    let remainingTime;
+
+    function startQuiz() {
+      const selectedTime = parseInt(document.getElementById("time-select").value);
+      remainingTime = selectedTime;
+      document.getElementById("timer-display").textContent = `남은 시간: ${remainingTime}초`;
+
+      clearInterval(timer);
+      timer = setInterval(() => {
+        remainingTime--;
+        document.getElementById("timer-display").textContent = `남은 시간: ${remainingTime}초`;
+        if (remainingTime <= 0) {
+          clearInterval(timer);
+          showPopup();
+        }
+      }, 1000);
+    }
+
+    function showPopup() {
+      const popup = window.confirm("시간이 종료되었습니다. 다시 도전하시겠습니까?");
+      if (popup) {
+        startQuiz();
+      }
+    }
+
+    function checkAnswers() {
+      const answers = {
+        a: "핵이 있는가?",
+        b: "다세포 생물인가?",
+        c: "광합성을 하는가?",
+        d: "운동성이 있는가?"
+      };
+
+      let correct = 0;
+      if (document.getElementById("a").value.trim() === answers.a) correct++;
+      if (document.getElementById("b").value.trim() === answers.b) correct++;
+      if (document.getElementById("c").value.trim() === answers.c) correct++;
+      if (document.getElementById("d").value.trim() === answers.d) correct++;
+
+      document.getElementById("result").textContent = `정답 개수: ${correct} / 4`;
+      return false; // prevent form submission
+    }
+  </script>
+</body>
+</html>
